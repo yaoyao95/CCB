@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+<struts>
+    <package name="notice_package" extends="common" namespace="/notices">       
+        
+        
+        <!-- <global-allowed-methods>regex:.*</global-allowed-methods> -->
+        
+        <!-- 显示主页公告栏 -->
+        <action name="select_forIndex" class="com.CantoneseClubBBS.action.NoticeAction" method="notices_select_forIndex">
+            <result name="select_forIndex">/JSP/notice/select_forIndex.jsp</result>
+        </action>
+        
+        <!-- 访问公告区，（按条件）分页查询公告 需要登录才能访问 -->
+        <action name="select_byPage" class="com.CantoneseClubBBS.action.NoticeAction" method="notices_select_byPage">
+           <interceptor-ref name="loginStack"></interceptor-ref>
+            <result name="select_byPage">/JSP/notice/select_byPage.jsp</result>
+        </action>
+        
+        
+        
+        <!-- 跳转到/JSP/notice/add.jsp页面 -->
+        <action name="toAddNotice">
+        	<interceptor-ref name="defaultStack"></interceptor-ref>
+        	<interceptor-ref name="interceptor_login"></interceptor-ref>
+        	<interceptor-ref name="checkNoticeAuthorityStack"></interceptor-ref>
+            <result>/JSP/notice/add.jsp</result>
+        </action>
+        
+        <!-- 添加公告 -->
+        <action name="add" class="com.CantoneseClubBBS.action.NoticeAction" method="addNotice">
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+        	<interceptor-ref name="interceptor_login"></interceptor-ref>
+        	<interceptor-ref name="checkNoticeAuthorityStack"></interceptor-ref>
+            <!-- 防表单重复提交拦截器 -->
+            <interceptor-ref name="token"></interceptor-ref>
+            <result type="redirectAction">select_byPage</result>
+            <!-- 后台validation校验失败 -->
+            <result name="input">/JSP/notice/add.jsp</result>
+            <!-- 表单重复提交后的转移页面 -->
+            <result name="invalid.token">/JSP/notice/add.jsp</result>
+        </action>
+        
+        <!-- 删除公告 -->
+        <action name="delNotice" class="com.CantoneseClubBBS.action.NoticeAction" method="delNotice">
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+        	<interceptor-ref name="interceptor_login"></interceptor-ref>
+        	<interceptor-ref name="checkNoticeAuthorityStack"></interceptor-ref>
+            <result type="redirectAction">select_byPage</result>
+        </action>
+        
+        <!-- 跳转到UpdateNoticeJSP页面 -->
+        <action name="toUpdateJSP" class="com.CantoneseClubBBS.action.NoticeAction" method="getNoticeById">
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+        	<interceptor-ref name="interceptor_login"></interceptor-ref>
+        	<interceptor-ref name="checkNoticeAuthorityStack"></interceptor-ref>
+            <result>/JSP/notice/update.jsp</result>
+        </action>
+        
+        <action name="update" class="com.CantoneseClubBBS.action.NoticeAction" method="update">
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+        	<interceptor-ref name="interceptor_login"></interceptor-ref>
+        	<interceptor-ref name="checkNoticeAuthorityStack"></interceptor-ref>
+            <!-- 防表单重复提交拦截器 -->
+            <interceptor-ref name="token"></interceptor-ref>
+            <result>/JSP/index.jsp</result>
+            <!-- 后台validation校验失败 -->
+            <result name="input">/JSP/notice/update.jsp</result>
+            <!-- 表单重复提交后的转移页面 -->
+            <result name="invalid.token">/JSP/notice/update.jsp</result>
+        </action>
+    </package>
+</struts>
+
+
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!-- Hibernate5的配置信息 ,配置多个，可以用于连接其他数据库,暂时用不到-->
+<hibernate-configuration>
+	<!-- 配置初始化SessionFactory的配置信息 -->
+	<session-factory>
+		<!-- 配置数据库方言 -->
+		<property name="hibernate.dialect">org.hibernate.dialect.Oracle12cDialect</property>
+		<!-- 配置是否显示SQL语句 -->
+		<property name="hibernate.show_sql">true</property>
+		<!-- 配置是否格式化SQL语句 -->
+		<property name="hibernate.format_sql">true</property>
+		<!-- 配置支持自动创建表: create-drop、create、update、validate -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		
+		<!-- 配置连接数据库相关信息 -->
+		<property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:ORCL12C</property>
+		<property name="hibernate.connection.username">C##ccb</property>
+		<property name="hibernate.connection.password">wxhljxA123</property>
+		<!-- 配置c3p0的相关信息 -->
+		
+		<property name="hibernate.cache.region.factory_class">
+           org.hibernate.cache.SingletonEhCacheRegionFactory
+        </property>
+		<property name="hibernate.c3p0.max_size">10</property>
+		<property name="hibernate.c3p0.min_size">2</property>
+		
+		<!-- 配置持久化类 -->
+		<mapping class="com.CantoneseClubBBS.domain.Section"/>
+		
+	</session-factory>
+</hibernate-configuration>

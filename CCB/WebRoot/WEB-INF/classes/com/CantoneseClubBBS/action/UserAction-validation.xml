@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="user_.nickname">
+        <field-validator type="stringlength">
+            <param name="maxLength">20</param>
+            <param name="minLength">1</param>
+            <message>昵称长度必须在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="user_.password_issue2">
+        <field-validator type="stringlength">
+            <param name="maxLength">30</param>
+            <param name="minLength">1</param>
+            <message>密保问题2长度必须在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="user_.passWord_answer2">
+        <field-validator type="stringlength">
+            <param name="maxLength">30</param>
+            <param name="minLength">1</param>
+            <message>密保答案2长度必须在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="oldpwd">
+        <field-validator type="stringlength">
+            <param name="maxLength">30</param>
+            <param name="minLength">1</param>
+            <message>原密码长度在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="newpwd">
+        <field-validator type="stringlength">
+            <param name="maxLength">30</param>
+            <param name="minLength">1</param>
+            <message>新密码长度在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="fnpwd">
+        <field-validator type="stringlength">
+            <param name="maxLength">30</param>
+            <param name="minLength">1</param>
+            <message>确认密码长度在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="personal_home">
+        <field-validator type="stringlength">
+            <param name="maxLength">500</param>
+            <param name="minLength">1</param>
+            <message>个人主页链接长度必须在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    
+</validators>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+<struts>
+    <package name="user_package" extends="common" namespace="/user">
+		
+		
+        <global-results>
+			<result name="input">/JSP/index.jsp</result>
+		</global-results>
+        
+        <action name="login" class="com.CantoneseClubBBS.action.UserAction" method="login">
+			    <interceptor-ref name="defaultStack"></interceptor-ref>
+			    <result>/JSP/index.jsp</result>
+			    <result name="loginError">/JSP/login.jsp</result>
+		</action>
+		
+		<action name="getUser" class="com.CantoneseClubBBS.action.UserAction" method="getUserById">
+    		<result>/JSP/User/showUserHome.jsp</result>
+    	</action>
+    	
+    	<action name="getUserByIdOrName" class="com.CantoneseClubBBS.action.UserAction" method="getUser">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<interceptor-ref name="checkAdminAuthority"></interceptor-ref>
+    		<result>/JSP/admin.jsp</result>
+    	</action>
+    	
+    	<!-- 添加用户（注册） -->
+    	<action name="addUser" class="com.CantoneseClubBBS.action.UserAction"
+    	 method="addUser">
+    		<result>/JSP/index.jsp</result>
+    		<!-- 后台校验失败 -->
+    		<result name="input">/JSP/register.jsp</result>
+    	</action>
+    	
+    	<!-- 更新用户头像 -->
+    	<action name="updateUserPic" class="com.CantoneseClubBBS.action.UserAction" method="updateUserPic">
+    	    <interceptor-ref name="defaultStack">
+    	        <param name="fileUpload.allowedTypes">image/jpeg,image/png</param>
+    	        <param name="fileUpload.maximumSize">204800</param>
+    	    </interceptor-ref>
+    	    <interceptor-ref name="interceptor_login"></interceptor-ref>
+    	    <!-- 后台校验失败 -->
+            <result name="input">/JSP/User/home.jsp</result>
+    	    <result>/JSP/User/home.jsp</result>
+    	    <result name="UploadError">/JSP/message/error/pictuteUploadError.jsp</result>
+    	</action>
+    	
+    	<!-- 更新用户信息 -->
+    	<action name="update" class="com.CantoneseClubBBS.action.UserAction" method="update">
+    	    <interceptor-ref name="defaultStack"></interceptor-ref>
+    	    <interceptor-ref name="interceptor_login"></interceptor-ref>
+    	    <result name="input">/JSP/User/home.jsp</result>
+    	    <result>/JSP/User/home.jsp</result>
+    	    <result name="UploadError">/JSP/message/error/pictuteUploadError.jsp</result>
+    	</action>
+    	<!-- 修改个人信息 -->
+    	<action name="toHome">
+    	    <interceptor-ref name="loginStack"></interceptor-ref>
+    	    <result>/JSP/User/home.jsp</result>
+    	</action>
+    	<!-- 到邮件箱页面  ,并分页显示用户收到的邮件-->
+    	<action name="toMailBox" class="com.CantoneseClubBBS.action.UserAction" method="selectReceivedMailsByPage">
+    	    <interceptor-ref name="loginStack"></interceptor-ref>
+    	    <result>/JSP/User/mailBox/inbox.jsp</result>
+    	</action>
+    	
+    	<!-- 到邮件箱页面  ,并分页显示用户收到的邮件 version2-->
+    	<action name="toMailBox2" class="com.CantoneseClubBBS.action.UserAction" method="selectReceivedMailsByPage2">
+    	    <interceptor-ref name="loginStack"></interceptor-ref>
+    	    <result>/JSP/User/mailBox/inbox2.jsp</result>
+    	</action>
+    	
+    	
+    	
+    	<!-- 获取用户邮件细节 -->
+    	<action name="getMailById" class="com.CantoneseClubBBS.action.UserAction" method="getMailById">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<result>/JSP/User/mailBox/mailDetail.jsp</result>
+    		<result name="noSuchMailOrIsNotYourMail">/JSP/message/error/knownError.jsp</result>
+    	</action>
+    	
+    	
+    	<!-- 获取用户邮件细节version2 -->
+    	<action name="getMail2ById" class="com.CantoneseClubBBS.action.UserAction" method="getMailById2">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<result>/JSP/User/mailBox/mailDetail2.jsp</result>
+    		<result name="noSuchMailOrIsNotYourMail">/JSP/message/error/knownError.jsp</result>
+    	</action>
+    	
+    	<!-- 对用户的邮件进行各种操作 -->
+    	<action name="operationForCheckedMails" class="com.CantoneseClubBBS.action.UserAction" method="operationForCheckedMails">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<result>/JSP/message/success/delMailsSuccess.jsp</result>
+    		<result name="unknownError">/JSP/message/error/unknownError.jsp</result>
+    	</action>
+    	
+    	<!-- 对用户的邮件进行各种操作version2 -->
+    	<action name="operationForCheckedMails2" class="com.CantoneseClubBBS.action.UserAction" method="operationForCheckedMails2">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<result>/JSP/message/success/delMailsSuccess2.jsp</result>
+    		<result name="unknownError">/JSP/message/error/unknownError.jsp</result>
+    		<result name="setMailUnreadSuccess">/JSP/message/success/success.jsp</result>
+    	</action>
+    	
+    	<action name="toSendMailBox" class="com.CantoneseClubBBS.action.UserAction" method="selectSendedMailsByPage">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    	    <result>/JSP/User/mailBox/outbox.jsp</result>
+    	</action>
+    	<!-- 去写新消息 -->
+    	<action name="toWriteMail" class="com.CantoneseClubBBS.action.UserAction">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    	    <result>/JSP/User/mailBox/writeNewMail.jsp</result>
+    	</action>
+    	<!-- 添加短消息 -->
+    	<action name="addMail2" class="com.CantoneseClubBBS.action.UserAction" method="addMail2">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    	    <result>/JSP/message/success/success.jsp</result>
+    	    <!-- 后台校验失败 -->
+            <result name="input">/JSP/User/mailBox/writeNewMail.jsp</result>
+    	    <result name="receiveUserDoesNotExist">/JSP/message/error/knownError.jsp</result>
+    	</action>
+    	
+    	<action name="toReminding" class="com.CantoneseClubBBS.action.UserAction" method="toReminding">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<result>/JSP/User/reminding.jsp</result>
+    	</action>
+    	
+    	<action name="toZan" class="com.CantoneseClubBBS.action.UserAction" method="toZan">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<result>/JSP/User/zan.jsp</result>
+    	</action>
+    	
+    	<action name="checkNewMessage" class="com.CantoneseClubBBS.action.UserAction" method="checkNewMessage"></action>
+    	
+    	<action name="toAdmin" class="com.CantoneseClubBBS.action.UserAction" method="toAdmin">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<interceptor-ref name="checkAdminAuthority"></interceptor-ref>
+    		<result>/JSP/admin.jsp</result>
+    	</action>
+    	<action name="userManage"  class="com.CantoneseClubBBS.action.UserAction" method="userManage">
+    		<interceptor-ref name="loginStack"></interceptor-ref>
+    		<interceptor-ref name="checkAdminAuthority"></interceptor-ref>
+    		<result>/JSP/admin.jsp</result>
+    	</action>
+    	
+    	
+    	
+    	
+	</package>
+</struts>
+
+
+

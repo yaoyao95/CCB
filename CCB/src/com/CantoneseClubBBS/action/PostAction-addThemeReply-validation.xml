@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="postReply.content">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message>内容不能为空</message>
+        </field-validator>
+        <field-validator type="stringlength">
+            <param name="maxLength">50000</param>
+            <param name="minLength">12</param>
+            <message>内容长度必须在5到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+</validators>

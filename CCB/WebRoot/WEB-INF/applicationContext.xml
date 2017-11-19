@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        				http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        				http://www.springframework.org/schema/context
+        				http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        				http://www.springframework.org/schema/tx
+        				http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+        				http://www.springframework.org/schema/aop
+        				http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        				http://www.springframework.org/schema/util
+        				http://www.springframework.org/schema/util/spring-util-4.3.xsd
+        				">
+    
+    
+    <!-- 配置dataSource -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"/>
+    
+    <!-- 配置SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+    p:dataSource-ref="dataSource"
+    p:packagesToScan="#{new java.lang.String[]{'com.CantoneseClubBBS.domain'}}"/>
+    
+    
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+    p:sessionFactory-ref="sessionFactory">
+    </bean>
+    
+    <!--  配置事务切面bean(声明式事务配置) 	以配置xml的方式
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        配置事务属性
+        <tx:attributes>
+            配置以set开头，只能做查询(不开启事务)
+            <tx:method name="set*" read-only="true"/>
+            配置以get开头，只能做查询(不开启事务)
+            <tx:method name="get*" read-only="true"/>
+            剩余的方法，开启事务，可以做(CRUD) 添加、修改、删除 ，
+                                 开启事务的作用：在开启事务的方法内，对数据库的表进行（若干）操作后，
+                                 如果在该方法内任意地方出错，都会rollback到方法开始时的状态。  
+                                 原理是事务切面，该方法前和该方法后都会调用加工方法，如果检测到该方法内抛出异常，就调用rollback方法。
+                                 所以，要注意如果该方法内抛出异常，如果被自己捕获了，方法后的加工方法就捕捉不到了
+            <tx:method name="*" read-only="false"/>
+        </tx:attributes>
+    </tx:advice> -->
+    
+    <!-- 配置普通的切面bean，用于配置LogAdivice，记录方法性能及异常情况 -->
+    <bean id="logAdvice" class="com.CantoneseClubBBS.aop.LogAdvice"/>
+    
+    <!-- 事务切面(运用到哪些切入点) -->
+    <aop:config>
+        <!-- 定义切入点 -->
+        <aop:pointcut expression="execution(* com.CantoneseClubBBS.service.*.*.*(..))" id="pointcut"/>
+       
+        <!-- 将上面的定义的切面bean运用到指定的切入点      以配置xml的方式
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/> 
+        -->
+        
+        <aop:aspect ref="logAdvice" >
+            <!-- 在业务层各个方法前后织入该切面bean的around方法，用于记录方法调用时间 -->
+            <aop:around method="around" pointcut-ref="pointcut"/>
+            <!-- 在业务层各个方法抛出异常后织入该切面bean的error方法，用于记录异常信息 -->
+            <aop:after-throwing method="error" throwing="t" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+    
+    <!-- 开启annotation注解事务     以注解的方式-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <!-- 开启Spring的组件扫描 -->
+    <context:component-scan base-package="com.CantoneseClubBBS"></context:component-scan>
+    
+    
+</beans>

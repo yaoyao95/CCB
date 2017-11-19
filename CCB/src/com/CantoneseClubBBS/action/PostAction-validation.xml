@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="theRemindedUserNames">
+        <field-validator type="stringlength">
+            <param name="maxLength">2000</param>
+            <param name="minLength">1</param>
+            <message>提醒栏长度必须在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+</validators>

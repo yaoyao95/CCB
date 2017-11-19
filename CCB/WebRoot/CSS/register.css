@@ -1,0 +1,57 @@
+@CHARSET "utf-8";
+.jibenxinxi{
+	font-family:"隶书";
+	font-size:30px;
+	font-weight:600;
+	width:130px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	padding:0px;
+	height:10px;}
+input{
+	height:25px;}
+	
+.input_default{
+	color:#757575;
+	width:200px;}
+.input{
+	color:#000;
+	width:200px;
+	}
+.buhefa,.nichengbu,.shenbu,.qqbu,.phonebu,.mimabu,.mimabuyizhibu{
+	color:#F00;}
+.hefa,.nicheng,.shen,.qq,.phone,.mima,.mimabuyizhi{
+	color:#0F0;}
+.main{
+
+}
+.form{
+    width:600px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:80px;
+	background-color: #b3ffff;
+	}
+
+
+select{
+	background-color:#9FF}
+
+.submit{
+	background-color:#00ffff;
+	width:80px;
+	position:relative;
+	left:150px;}
+.clear{
+	background-color:#00ffff;
+	width:80px;
+	position:relative;
+	left:200px;}
+.zuo{
+	font-size:20px;
+	width: 140px;}
+
+.xingbie{
+
+}

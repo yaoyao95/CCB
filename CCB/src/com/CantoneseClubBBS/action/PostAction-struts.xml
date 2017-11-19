@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+<struts>
+    <package name="post_package" extends="common" namespace="/post">
+    	
+    	
+    	
+		 <!-- （按条件）分页查询主题 -->
+        <action name="select_byPage" class="com.CantoneseClubBBS.action.PostAction" method="select_byPage">
+            <!-- <interceptor-ref name="autoLoginStack"></interceptor-ref> -->
+            <result name="select_byPage">/JSP/post/select_byPage.jsp</result>
+            <result name="teachingPostRegion">/JSP/post/select_byPage.jsp</result>
+        </action>
+		
+		<!--根据主题id，查找主题内容及其回帖内容
+		 因为无法有效的对回帖进行分页查询，影响性能，这个action作废吧，用下面的action -->
+		<action name="getPostThemeById" class="com.CantoneseClubBBS.action.PostAction" 
+		        method="getPostThemeById">
+            <result>/JSP/post/theme_detail.jsp</result>
+        </action>
+        
+        <!--根据主题id，分页查找主题内容及其回帖内容 -->
+		<action name="getPTByIdByPage" class="com.CantoneseClubBBS.action.PostAction" 
+		        method="getPTByIdByPage">
+            <result>/JSP/post/theme_detail.jsp</result><!--/JSP/teaching/test.jsp-->
+        </action>
+        
+        
+        <!-- 携带教学主题id，跳转到回复页面-->
+        <action name="toAddThemeReply" class="com.CantoneseClubBBS.action.PostAction" 
+		        method="toAddThemeReply">
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+		    <interceptor-ref name="checkIsForbidden"></interceptor-ref>
+            <result>/JSP/post/addReply.jsp</result>
+        </action>
+        
+        
+        
+        <!-- 添加回复 -->
+        <action name="addThemeReply" class="com.CantoneseClubBBS.action.PostAction" method="addThemeReply">
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+            <interceptor-ref name="checkIsForbidden"></interceptor-ref>
+            <!-- 防表单重复提交拦截器 -->
+            <interceptor-ref name="token"></interceptor-ref>
+             <!-- 表单重复提交后的转移页面 -->
+            <result name="invalid.token" type="redirectAction">
+            	<param name="actionName">toAddThemeReply</param>
+            	<param name="errorMessage">请不要重复提交或通过浏览器后退功能回到本页面</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="saveReplyFlag">true</param>
+            	<param name="postReply.id">${postReply.id}</param>
+            </result>
+            <!-- 后台校验失败 -->
+            <result name="input">/JSP/post/addReply.jsp</result>
+            <result name="success" type="redirectAction">
+            	<param name="actionName">getPTByIdByPage</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="saveReplyFlag">true</param>
+            	<param name="postReply.id">${postReply.id}</param>
+            </result>
+            <!-- 如果提交时出现错误，则重新调用toAddThemeReply.action（旨在换token，防止触发防重复提交拦截器），并自动填充用户输入过的数据 -->
+            <result name="AddRemindingErrorAndThenToAddThemeReply" type="redirectAction">
+            	<param name="actionName">toAddThemeReply</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="originalPostContent">${originalPostContent}</param>
+            	<param name="checkedReplyIds">${checkedReplyIds}</param>
+            	<param name="pageModel.pageSize">${pageModel.pageSize}</param>
+            	<param name="order">${order}</param>
+            	<param name="theRemindedUserNames">${theRemindedUserNames}</param>
+            	<param name="errorMessage">${errorMessage}</param>
+            </result>
+        </action>
+        
+        <!-- 跳转到添加主题页面 ，携带用户id，section。需要登录 -->
+        <action name="toAddTheme" class="com.CantoneseClubBBS.action.PostAction" method="toAddTheme">
+            <interceptor-ref name="loginStack"></interceptor-ref>
+            <interceptor-ref name="checkIsForbidden"></interceptor-ref>
+            <result>/JSP/post/addTheme.jsp</result>
+        </action>
+        
+        <!-- 添加教学主题 -->
+        <action name="addTheme" class="com.CantoneseClubBBS.action.PostAction" method="addTheme"><!-- 需要修改 -->
+            <interceptor-ref name="loginStack"></interceptor-ref>
+            <interceptor-ref name="checkIsForbidden"></interceptor-ref>
+            <!-- 防表单重复提交拦截器 -->
+            <interceptor-ref name="token"></interceptor-ref>
+             <!-- 表单重复提交后的转移页面 -->
+            <result name="invalid.token" type="redirectAction">
+            	<param name="actionName">toAddTheme</param>
+            	<param name="errorMessage">请不要重复提交或通过浏览器后退功能回到本页面</param>
+            	<param name="section.name">${section.name}</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="saveReplyFlag">false</param>
+            </result>
+            <!-- 后台校验失败 -->
+            <result name="input">/JSP/post/addTheme.jsp</result>
+            <result name="success" type="redirectAction">
+            	<param name="actionName">getPTByIdByPage</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="saveReplyFlag">false</param>
+            </result>
+            <!-- 如果提交时出现错误，则重新调用toAddTheme.action（旨在换token，防止触发防重复提交拦截器），并自动填充用户输入过的数据 -->
+            <result name="AddRemindingErrorAndThenToAddTheme" type="redirectAction">
+            	<param name="actionName">toAddTheme</param>
+            	<param name="section.name">${section.name}</param>
+            	<param name="section.region_name_abbr">${section.region_name_abbr}</param>
+            	<param name="postTheme.title">${postTheme.title}</param>
+            	<param name="originalPostContent">${originalPostContent}</param>
+            	<param name="theRemindedUserNamesForUpdateJSP">${theRemindedUserNamesForUpdateJSP}</param>
+            	<param name="errorMessage">${errorMessage}</param>
+            </result>
+            <result name="error">/JSP/message/error/illegalInput.jsp</result>
+        </action>
+        
+        <action name="toUpdateTheme" class="com.CantoneseClubBBS.action.PostAction" method="toUpdateTheme">
+        	<interceptor-ref name="loginStack"></interceptor-ref>
+            <interceptor-ref name="checkPostAuthorityStack"></interceptor-ref>
+            <interceptor-ref name="checkIsForbidden"></interceptor-ref>
+            <result>/JSP/post/updateTheme.jsp</result>
+        </action>
+        
+        <action name="updateTheme" class="com.CantoneseClubBBS.action.PostAction" method="updateTheme">
+            <interceptor-ref name="loginStack"></interceptor-ref>
+            <interceptor-ref name="checkPostAuthorityStack"></interceptor-ref>
+            <interceptor-ref name="checkIsForbidden"></interceptor-ref>
+            <interceptor-ref name="token"></interceptor-ref>
+             <!-- 表单重复提交后的转移页面 -->
+            <result name="invalid.token" type="redirectAction">
+            	<param name="actionName">toUpdateTheme</param>
+            	<param name="errorMessage">请不要重复提交或通过浏览器后退功能回到本页面</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            </result>
+             <!-- 后台校验失败 -->
+            <result name="input">/JSP/post/updateTheme.jsp</result>
+            <result name="success" type="redirectAction">
+            	<param name="actionName">getPTByIdByPage</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="saveReplyFlag">false</param>
+            </result>
+            <!-- 如果提交时出现错误，则重新调用toAddTheme.action（旨在换token，防止触发防重复提交拦截器），并自动填充用户输入过的数据 -->
+            <result name="AddRemindingErrorAndThenToUpdateTheme" type="redirectAction">
+            	<param name="actionName">toUpdateTheme</param>
+            	<param name="postTheme.id">${postTheme.id}</param>
+            	<param name="postTheme.title">${postTheme.title}</param>
+            	<param name="section.name">${section.name}</param>
+            	<param name="section.region_name_abbr">${section.region_name_abbr}</param>
+            	<param name="originalPostContent">${originalPostContent}</param>
+            	<param name="isAdmin">${isAdmin}</param>
+            	<param name="isTheAuthor">${isTheAuthor}</param>
+            	<param name="theRemindedUserNames">${theRemindedUserNames}</param>
+            	<param name="errorMessage">${errorMessage}</param>
+            </result>
+        </action>
+        
+        <!-- 上传用户图片，并返回文件标记，异步请求 -->
+        <action name="uploadPostFile" class="com.CantoneseClubBBS.action.PostAction" method="uploadPostFile">
+        	<interceptor-ref name="defaultStack">
+    	        <param name="fileUpload.allowedTypes">image/jpeg,image/png</param>
+    	        <param name="fileUpload.maximumSize">1049600</param>
+    	    </interceptor-ref>
+    	    <interceptor-ref name="interceptor_login"></interceptor-ref>
+    	    <result name="input" type="dispatcher">
+    	    	<param name="message1">上传错误</param>
+    	    	<param name="location">/JSP/message/error/showErrorMessageTextOnly.jsp</param>
+    	    </result>
+        </action>
+        
+        <!-- index 页面 -->
+        <action name="select_forIndex" class="com.CantoneseClubBBS.action.PostAction" method="select_forIndex">
+        	<result>/JSP/post/select_forIndex.jsp</result>
+        </action>
+        
+        <!-- 显示特定回帖 -->
+        <action name="showQuoteReplyDetail" class="com.CantoneseClubBBS.action.PostAction"  method="showQuoteReplyDetail"></action>
+        
+        <!-- 显示主题赞的数目 -->
+        <action name="addPostZan" class="com.CantoneseClubBBS.action.PostAction" method="addPostZan">
+        	<interceptor-ref name="loginStack"></interceptor-ref>
+        	<interceptor-ref name="checkIsForbidden"></interceptor-ref>
+        </action>
+	</package>
+</struts>
+
+
+

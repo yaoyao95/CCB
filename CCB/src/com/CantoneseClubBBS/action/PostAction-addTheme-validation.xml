@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- 标题校验 -->
+    <field name="postTheme.title">
+        <!-- 字段校验器，字符串必须 -->
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message>标题不能为空</message>
+        </field-validator>
+         <field-validator type="stringlength">
+            <param name="maxLength">250</param>
+            <param name="minLength">1</param>
+            <message>长度必须在${minLength}到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+    <field name="postTheme.content">
+        <field-validator type="requiredstring">
+            <param name="trim">true</param>
+            <message>内容不能为空</message>
+        </field-validator>
+        <field-validator type="stringlength">
+            <param name="maxLength">50000</param>
+            <param name="minLength">12</param>
+            <message>内容长度必须在5到${maxLength}字符之间</message>
+        </field-validator>
+    </field>
+</validators>

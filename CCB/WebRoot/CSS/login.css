@@ -1,0 +1,61 @@
+@CHARSET "utf-8";
+body{
+	}
+/* .main{
+	width:1000px;
+	background-color:#0FF;
+	margin-left:auto;
+	margin-right:auto;
+	height:750px;} */
+.middle{
+	width:500px;
+	background-color:#bbffff;
+	margin-left:auto;
+	margin-right:auto;
+	position:relative;
+	top:150px;
+	}
+.zuotu{
+	float:left;
+	margin-left: 20px;
+	margin-top:10px}
+.denglubiao{
+	height:200px;}
+.usernamediv{
+	height:40px;
+	position:relative;
+	left:50px;
+	top:40px;}
+.userpsddiv{
+	height:40px;
+	position:relative;
+	left:68px;
+	top:50px;}
+.zhucediv{
+	padding:0px;
+	width:50px;
+	position:relative;
+	left:408px;
+	top:-10px;
+	}
+.zhucefont{
+	width:35px;
+	margin-left:auto;
+	margin-right:auto;}
+.submit{
+	position:relative;
+	left:160px;
+	top:63px;}
+
+.autoLogin{
+	position:relative;
+	left:100px;
+	top:50px;
+}
+
+.yanzhengma{
+	position: relative;
+	padding-left:50px;
+	left:78px;
+	top:60px;
+}

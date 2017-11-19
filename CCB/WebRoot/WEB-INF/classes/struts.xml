@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+<struts>
+
+    <!-- Some or all of these can be flipped to true for debugging -->
+    <constant name="struts.i18n.reload" value="true" />
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.configuration.xml.reload" value="true" />
+    <!-- 配置国际化资源文件 -->
+    <constant name="struts.custom.i18n.resources" value="Cantonese_massage" />
+    <constant name="struts.action.extension" value="action,," />
+    <constant name="struts.convention.result.path" value="/WEB-INF" />
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant> 
+    <constant name="struts.ui.theme" value="simple"></constant>
+    <constant name="struts.multipart.maxSize" value="10485760"/>
+    <!-- namespace的作用是给这里的package定一个id，拿来识别是哪个package（package可以有很多个） 
+         而这里的name是用来标识package的，给这里的extend用的，即这个package继承哪个package -->
+    <!-- 通用package -->
+    <package name="common" extends="struts-default" namespace="/">
+         <!-- 所有拦截器配置  -->
+		 <interceptors>
+		 
+		    <!-- 拦截器配置 -->
+			<interceptor name="interceptor_login" class="com.CantoneseClubBBS.interceptor.LoginInterceptor"></interceptor>
+			<interceptor name="checkNoticeAuthorityStack" class="com.CantoneseClubBBS.interceptor.CheckNoticeAuthorityStack"></interceptor>
+			<interceptor name="checkPostAuthorityStack" class="com.CantoneseClubBBS.interceptor.CheckPostAuthorityStack"></interceptor>
+			<interceptor name="checkAdminAuthority" class="com.CantoneseClubBBS.interceptor.CheckAdminAuthority"></interceptor>
+			<interceptor name="checkIsForbidden" class="com.CantoneseClubBBS.interceptor.CheckIsForbidden"></interceptor>
+			<interceptor name="autoLogin" class="com.CantoneseClubBBS.interceptor.AutoLogin"></interceptor>
+			
+			<!-- 登录拦截器 栈 配置 -->
+			<interceptor-stack name="loginStack">
+			    <!-- 默认拦截器 栈  -->
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!-- 登录拦截器 -->
+				<interceptor-ref name="interceptor_login"></interceptor-ref>
+			</interceptor-stack>
+			
+			<interceptor-stack name="autoLoginStack">
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+                <interceptor-ref name="autoLogin"></interceptor-ref>
+                
+			</interceptor-stack>
+		</interceptors>
+		
+		<!-- <default-interceptor-ref name="autoLoginStack"></default-interceptor-ref> -->
+		
+		<!-- 请登录 -->
+		<global-results>
+		    <result name="pleaseLogin">/JSP/message/error/knownError.jsp</result><!-- 已知错误，请登录 -->
+		    <result name="input">/JSP/message/error/unknownError.jsp</result><!-- 未知错误      input.jsp -->
+		    <result name="unknownError">/JSP/message/error/unknownError.jsp</result><!-- 未知错误 -->
+		    <result name="knownError">/JSP/message/error/knownError.jsp</result>
+		    <result name="showMessage">/JSP/message/success/showMessage.jsp</result>
+		</global-results>
+		
+        <action name="showNavigation" class="com.CantoneseClubBBS.action.UserAction" method="getLoginUser">
+        	<interceptor-ref name="autoLoginStack"></interceptor-ref>
+            <result>/JSP/navigation.jsp</result>
+        </action>
+        <action name="toIndex">
+            <result>/JSP/index.jsp</result>
+        </action>
+        <action name="tologin" class="com.CantoneseClubBBS.action.UserAction" method="toLogin">
+            <result>/JSP/login.jsp</result>
+        </action>
+        <action name="logout" class="com.CantoneseClubBBS.action.UserAction" method="logout">
+            <result>/JSP/index.jsp</result>
+        </action>
+        <action name="toRegister">
+            <result>/JSP/register.jsp</result>
+        </action>
+        
+        
+        <action name="totext">
+            <result>JSP/post/test.jsp</result>
+        </action>
+        
+        <!-- 制作验证码 -->
+    	<action name="createImage" class="com.CantoneseClubBBS.action.CreateImageAction">
+    		<result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">inputStream</param>
+            </result>
+    	</action>
+        <action name="pageAdmin" class="com.CantoneseClubBBS.action.BBSAdminAction" method="pageAdmin"><!-- 未完待续 -->
+        	<result name="input">/JSP/message/error/knownError.jsp</result><!-- /JSP/message/error/knownError.jsp -->
+        	<result>/JSP/message/success/success.jsp</result>
+        </action>
+    </package>
+    
+    <include file="com/CantoneseClubBBS/action/NoticeAction-struts.xml"></include>
+    <include file="com/CantoneseClubBBS/action/UserAction-struts.xml"></include>
+    <include file="com/CantoneseClubBBS/action/PostAction-struts.xml"></include>
+    <include file="com/CantoneseClubBBS/action/InitAction-struts.xml"></include>
+
+    
+</struts>
+
+
+
